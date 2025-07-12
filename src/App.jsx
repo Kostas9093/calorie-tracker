@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getWeekNumber, calculateMaintenance } from './utils';
-import UserPrompt from './UserPrompt';
+import UserPrompt from './components/UserPrompt';
 
 function getStartOfWeek(date) {
   const d = new Date(date);
@@ -29,6 +29,8 @@ export default function App() {
     const stored = localStorage.getItem('userData');
     return stored ? JSON.parse(stored) : null;
   });
+
+  const [editingProfile, setEditingProfile] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('calorieData', JSON.stringify(data));
@@ -64,9 +66,18 @@ export default function App() {
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Weekly Calorie Tracker</h1>
 
-      {!userData && <UserPrompt onSave={setUserData} />}
+      {editingProfile || !userData ? (
+        <UserPrompt
+          initialValues={userData}
+          onSave={(data) => {
+            setUserData(data);
+            localStorage.setItem('userData', JSON.stringify(data));
+            setEditingProfile(false);
+          }}
+        />
+      ) : null}
 
-      {userData && (
+      {userData && !editingProfile && (
         <div className={`p-4 mb-4 border rounded ${colorClass}`}>
           <div className="font-semibold mb-1">{weekLabel}</div>
           <div>Total Calories: {weeklyTotal.toFixed(0)} kcal</div>
@@ -80,6 +91,15 @@ export default function App() {
               : 'Neutral (↔ Maintenance)'}
           </div>
         </div>
+      )}
+
+      {userData && !editingProfile && (
+        <button
+          onClick={() => setEditingProfile(true)}
+          className="mb-4 text-sm text-blue-600 underline"
+        >
+          Update Weight or Activity
+        </button>
       )}
 
       <div className="grid gap-2">
