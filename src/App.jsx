@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getWeekNumber, calculateMaintenance } from './utils';
-import UserPrompt from './components/UserPrompt';
+import UserPrompt from './UserPrompt';
 
 function getStartOfWeek(date) {
   const d = new Date(date);
@@ -94,12 +94,21 @@ export default function App() {
       )}
 
       {userData && !editingProfile && (
-        <button
-          onClick={() => setEditingProfile(true)}
-          className="mb-4 text-sm text-blue-600 underline"
-        >
-          Update Weight or Activity
-        </button>
+        <>
+          <button
+            onClick={() => setEditingProfile(true)}
+            className="mb-4 text-sm text-blue-600 underline"
+          >
+            Update Weight or Activity
+          </button>
+
+          <Link
+            to="/monthly"
+            className="block mb-6 text-sm text-purple-700 underline hover:text-purple-900"
+          >
+            📊 View Monthly Progress
+          </Link>
+        </>
       )}
 
       <div className="grid gap-2">
