@@ -1,52 +1,51 @@
 // src/components/UserPrompt.jsx
 import React, { useState } from 'react';
 
-export default function UserPrompt({ onSave }) {
-  const [form, setForm] = useState({
-    age: '',
-    sex: 'male',
-    height: '',
-    weight: '',
-    activity: 'moderate',
-  });
+export default function UserPrompt({ onSave, initialValues = null }) {
+  const [weight, setWeight] = useState(initialValues?.weight || '');
+  const [activity, setActivity] = useState(initialValues?.activity || 'light');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = () => {
-    const parsed = {
-      age: parseInt(form.age),
-      sex: form.sex,
-      height: parseInt(form.height),
-      weight: parseFloat(form.weight),
-      activity: form.activity,
-    };
-    localStorage.setItem('userData', JSON.stringify(parsed));
-    onSave(parsed);
+  const handleSave = () => {
+    const parsedWeight = parseFloat(weight);
+    if (!isNaN(parsedWeight)) {
+      onSave({ weight: parsedWeight, activity });
+    }
   };
 
   return (
-    <div className="p-4 border rounded mb-4 bg-yellow-50">
-      <h3 className="font-semibold mb-2">Enter your information</h3>
-      <div className="grid gap-2">
-        <input name="age" type="number" placeholder="Age" value={form.age} onChange={handleChange} />
-        <input name="height" type="number" placeholder="Height (cm)" value={form.height} onChange={handleChange} />
-        <input name="weight" type="number" placeholder="Weight (kg)" value={form.weight} onChange={handleChange} />
-        <select name="sex" value={form.sex} onChange={handleChange}>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-        <select name="activity" value={form.activity} onChange={handleChange}>
-          <option value="sedentary">Sedentary</option>
-          <option value="light">Light Activity</option>
-          <option value="moderate">Moderate</option>
-          <option value="active">Active</option>
-          <option value="very">Very Active</option>
-        </select>
-        <button onClick={handleSubmit} className="bg-blue-500 text-white px-3 py-1 rounded">Save</button>
+    <div className="p-4 border rounded mb-4">
+      <h2 className="text-lg font-semibold mb-2">
+        {initialValues ? 'Update Profile' : 'Enter Your Profile'}
+      </h2>
+      <div className="mb-2">
+        <label className="block text-sm">Current Weight (kg):</label>
+        <input
+          type="number"
+          className="border px-2 py-1 rounded w-full"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+        />
       </div>
+      <div className="mb-2">
+        <label className="block text-sm">Activity Level:</label>
+        <select
+          className="border px-2 py-1 rounded w-full"
+          value={activity}
+          onChange={(e) => setActivity(e.target.value)}
+        >
+          <option value="sedentary">Sedentary (little/no exercise)</option>
+          <option value="light">Light (1–3 days/week)</option>
+          <option value="moderate">Moderate (3–5 days/week)</option>
+          <option value="active">Active (6–7 days/week)</option>
+          <option value="very">Very active (twice/day or hard labor)</option>
+        </select>
+      </div>
+      <button
+        onClick={handleSave}
+        className="mt-2 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+      >
+        {initialValues ? 'Update' : 'Save'}
+      </button>
     </div>
   );
 }
