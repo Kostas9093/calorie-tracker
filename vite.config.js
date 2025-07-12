@@ -5,4 +5,5 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/calorie-tracker/',
   plugins: [react()],
+  base: '/calorie-tracker/',
 })
