@@ -7,7 +7,7 @@ import DayDetail from './DayDetail';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Router>
+    <Router basename="/calorie-tracker">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/day/:dayName" element={<DayDetail />} />
